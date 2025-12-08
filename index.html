@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edben - Desarrollador de Software</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Matrix Rain Effect Background -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- Header/Navigation -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://i.imgur.com/9jgZ1Zm.png" alt="Logo Edben">
+                    <span>Edben</span>
+                </div>
+                <nav class="nav" id="navMenu">
+                    <ul>
+                        <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                        <li><a href="#about" class="nav-link">Sobre mí</a></li>
+                        <li><a href="#skills" class="nav-link">Habilidades</a></li>
+                        <li><a href="#portfolio" class="nav-link">Portafolio</a></li>
+                        <li><a href="#experience" class="nav-link">Experiencia</a></li>
+                        <li><a href="#contact" class="nav-link">Contacto</a></li>
+                    </ul>
+                </nav>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero section-scroll">
+        <div class="hero-background"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <span class="greeting"> Hola que tal, soy</span>
+                    <h1 class="hero-title">
+                        Soy <span class="highlight">Edwar Alexander</span><br>
+                        Benito Basante
+                    </h1>
+                    <h2 class="hero-subtitle">
+                        <span class="typing-text">Software Developer</span>
+                    </h2>
+                    <p class="hero-description">
+                        Estudiante de Ingeniería de Software apasionado por la ciencia ficción, la historia, el belicismo y la ingeniería.
+                        Especializado en desarrollo full-stack con tecnologías modernas.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn btn-primary">
+                            <i class="fas fa-envelope"></i> Contáctame
+                        </a>
+                        <a href="#portfolio" class="btn btn-secondary">
+                            <i class="fas fa-briefcase"></i> Ver Proyectos
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="profile-card">
+                        <div class="profile-img-wrapper">
+                            <img src="https://i.imgur.com/9jgZ1Zm.png" alt="Edben Profile">
+                        </div>
+                        <div class="tech-icons">
+                            <i class="fab fa-python"></i>
+                            <i class="fab fa-react"></i>
+                            <i class="fab fa-angular"></i>
+                            <i class="fab fa-java"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section-scroll">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Sobre mí</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        Buenos días, tardes o noches. Soy <strong>Edwar Alexander Benito Basante</strong>, 
+                        estudiante de Ingeniería de Software en la Universidad Cooperativa de Colombia.
+                    </p>
+                    <p>
+                        Me apasionan la ciencia ficción, el belicismo,amante de los metroidvanias, la historia, la ingeniería,ir al gimnasio y las artes marciales. Mi enfoque está en crear 
+                        soluciones tecnológicas innovadoras utilizando las mejores prácticas de desarrollo.
+                    </p>
+                    <div class="interests">
+                        <h3>Intereses</h3>
+                        <div class="interest-tags">
+                            <span class="tag"><i class="fas fa-rocket"></i> Ciencia Ficción</span>
+                            <span class="tag"><i class="fas fa-book"></i> Historia</span>
+                            <span class="tag"><i class="fas fa-cogs"></i> Ingeniería</span>
+                            <span class="tag"><i class="fas fa-code"></i> Desarrollo Software</span>
+                            <span class="tag"><i class="fas fa-dumbbell"></i> Fit</span>
+                            <span class="tag"><i class="fas fa-dumbbell"></i> MMA</span>
+                            <span class="tag"><i class="fas fa-gamepad"></i> Gaming</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills section-scroll">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Tech Stack & Habilidades</h2>
+                <p class="section-subtitle">
+                    Mi conjunto de habilidades centrado en desarrollo full-stack y tecnologías modernas
+                </p>
+                <div class="title-underline"></div>
+            </div>
+            
+            <div class="skills-categories">
+                <!-- Backend -->
+                <div class="skill-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-server"></i> Backend Development
+                    </h3>
+                    <div class="skills-grid">
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fab fa-python"></i>
+                            </div>
+                            <h4>Django</h4>
+                        </div>
+
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h4>Flask</h4>
+                        </div>
+
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fab fa-java"></i>
+                            </div>
+                            <h4>Spring Boot</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frontend -->
+                <div class="skill-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-laptop-code"></i> Frontend Development
+                    </h3>
+                    <div class="skills-grid">
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fab fa-react"></i>
+                            </div>
+                            <h4>React</h4>
+                        </div>
+
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fab fa-angular"></i>
+                            </div>
+                            <h4>Angular</h4>
+                        </div>
+
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <h4>Next.js</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile & IoT -->
+                <div class="skill-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-mobile-alt"></i> Mobile & IoT
+                    </h3>
+                    <div class="skills-grid">
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fas fa-mobile"></i>
+                            </div>
+                            <h4>Flutter</h4>
+                        </div>
+
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <h4>ThingSpeak</h4>
+                        </div>
+
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fab fa-docker"></i>
+                            </div>
+                            <h4>Docker</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database -->
+                <div class="skill-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-database"></i> Bases de Datos
+                    </h3>
+                    <div class="skills-grid">
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h4>MongoDB</h4>
+                        </div>
+
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h4>PostgreSQL</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio section-scroll">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Portafolio</h2>
+                <p class="section-subtitle">Algunos de mis proyectos recientes</p>
+                <div class="title-underline"></div>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-card">
+                    <div class="portfolio-image">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>Proyecto Full-Stack</h3>
+                        <p>Aplicación web desarrollada con React y Django</p>
+                        <div class="portfolio-tags">
+                            <span>React</span>
+                            <span>Django</span>
+                            <span>MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-card">
+                    <div class="portfolio-image">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>App Móvil</h3>
+                        <p>Aplicación multiplataforma con Flutter</p>
+                        <div class="portfolio-tags">
+                            <span>Flutter</span>
+                            <span>Firebase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-card">
+                    <div class="portfolio-image">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>Sistema IoT</h3>
+                        <p>Monitoreo de datos con ThingSpeak</p>
+                        <div class="portfolio-tags">
+                            <span>IoT</span>
+                            <span>ThingSpeak</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience section-scroll">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Experiencia</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Tutor de Ingles</h3>
+                        <h4>Ciudad de Santa Marta / Municipio de San Pedro de Uraba</h4>
+                        <p class="timeline-date">Semestre A 2023</p>
+                        <p>Apoya a estudiantes de manera personalizada en el aprendizaje y práctica del idioma.</p>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Auxiliar en gestion de archivo</h3>
+                        <h4>Batallon de infanteria #47 Francisco de Paula Velez/ Bivel 47</h4>
+                        <p class="timeline-date">Semestre B 2023</p>
+                        <p>Cargo operativo que ejecuta tareas de clasificación, ordenamiento, préstamo y archivo físico.</p>
+                    </div>
+                    <div class="timeline-content">
+                        <h3>Estudiante de Ingeniería de Software y monitor de bienestar Universitario</h3>
+                        <h4>Universidad Cooperativa de Colombia Campus Pasto</h4>
+                        <p class="timeline-date">Actualidad</p>
+                        <p>Formación en desarrollo de software, arquitectura de sistemas y metodologías ágiles.</p><br>
+                        <p>Enfocado en administrar el ciclo de vida de los documentos, políticas, digitalización, acceso y control.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section-scroll">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Contacto</h2>
+                <p class="section-subtitle">¿Tienes un proyecto en mente? ¡Hablemos!</p>
+                <div class="title-underline"></div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <a href="mailto:ebenito370@gmail.com" class="contact-card" target="_blank">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p>ebenito370@gmail.com</p>
+                    </a>
+                    <a href="mailto:edben1407@gmail.com" class="contact-card" target="_blank">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p>edben1407@gmail.com</p>
+                    </a>
+                    <a href="https://github.com/edben110" class="contact-card" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github"></i>
+                        <h3>GitHub</h3>
+                        <p>github.com/edben110</p>
+                    </a>
+                    <a href="https://www.linkedin.com/in/edwar-alexander-benito-basante-0a9742393/" class="contact-card" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-linkedin"></i>
+                        <h3>LinkedIn</h3>
+                        <p>linkedin.com/in/edwar-alexander-benito-basante-0a9742393/</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Edben. Todos los derechos reservados.</p>
+            <div class="social-links">
+                <a href="https://github.com/edben110" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/edwar-alexander-benito-basante-0a9742393/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/573054789477?text=Hola%20Edben%2C%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20contactarte" 
+       class="whatsapp-button" 
+       target="_blank"
+       aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="script.js"></script>
+    <script src="matrix.js" type="module"></script>
+</body>
+</html>
