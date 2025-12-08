@@ -117,7 +117,6 @@ Y en `styles.css`:
 
 - **Email**: edben1407@gmail.com
 - **GitHub**: [@edben110](https://github.com/edben110)
-- **LinkedIn**: [edben](https://linkedin.com/in/edben)
 
 ## 📄 Licencia
 
