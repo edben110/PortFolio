@@ -216,3 +216,199 @@ console.log('%c> SYSTEM INITIALIZED', 'color: #00ff41; font-size: 16px; font-fam
 console.log('%c> LOADING PORTFOLIO...', 'color: #00cc33; font-size: 14px; font-family: monospace;');
 console.log('%c> ACCESS GRANTED', 'color: #00ff88; font-size: 14px; font-family: monospace;');
 console.log('%c> █', 'color: #00ff41; font-size: 16px; font-family: monospace;');
+
+// ========================================
+// SKILLS CAROUSEL
+// ========================================
+class SkillsCarousel {
+    constructor() {
+        this.track = document.getElementById('carouselTrack');
+        this.prevBtn = document.getElementById('carouselPrev');
+        this.nextBtn = document.getElementById('carouselNext');
+        this.indicatorsContainer = document.getElementById('carouselIndicators');
+        
+        if (!this.track || !this.prevBtn || !this.nextBtn) {
+            return; // Carousel elements not found
+        }
+        
+        this.items = Array.from(this.track.querySelectorAll('.carousel-item'));
+        this.currentIndex = 0;
+        this.itemCount = this.items.length;
+        
+        this.init();
+        this.setupEventListeners();
+    }
+    
+    init() {
+        // Mark first item as active
+        this.items.forEach((item, index) => {
+            item.classList.toggle('active', index === 0);
+        });
+        
+        // Create indicators
+        this.createIndicators();
+        this.updateTrack();
+    }
+    
+    createIndicators() {
+        this.indicatorsContainer.innerHTML = '';
+        
+        for (let i = 0; i < this.itemCount; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+            indicator.addEventListener('click', () => this.goToSlide(i));
+            this.indicatorsContainer.appendChild(indicator);
+        }
+    }
+    
+    setupEventListeners() {
+        this.prevBtn.addEventListener('click', () => this.prevSlide());
+        this.nextBtn.addEventListener('click', () => this.nextSlide());
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (this.track.closest('section#skills')) {
+                if (e.key === 'ArrowLeft') this.prevSlide();
+                if (e.key === 'ArrowRight') this.nextSlide();
+            }
+        });
+    }
+    
+    updateTrack() {
+        const offset = -this.currentIndex * 100;
+        this.track.style.transform = `translateX(${offset}%)`;
+        
+        // Update active indicator
+        const indicators = this.indicatorsContainer.querySelectorAll('.carousel-indicator');
+        indicators.forEach((ind, index) => {
+            ind.classList.toggle('active', index === this.currentIndex);
+        });
+        
+        // Update active item
+        this.items.forEach((item, index) => {
+            item.classList.toggle('active', index === this.currentIndex);
+        });
+    }
+    
+    nextSlide() {
+        this.currentIndex = (this.currentIndex + 1) % this.itemCount;
+        this.updateTrack();
+    }
+    
+    prevSlide() {
+        this.currentIndex = (this.currentIndex - 1 + this.itemCount) % this.itemCount;
+        this.updateTrack();
+    }
+    
+    goToSlide(index) {
+        this.currentIndex = Math.max(0, Math.min(index, this.itemCount - 1));
+        this.updateTrack();
+    }
+}
+
+// Initialize carousel when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    new SkillsCarousel();
+    new PortfolioCarousel();
+});
+
+// ========================================
+// PORTFOLIO CAROUSEL
+// ========================================
+class PortfolioCarousel {
+    constructor() {
+        this.track = document.getElementById('portfolioCarouselTrack');
+        this.prevBtn = document.getElementById('portfolioCarouselPrev');
+        this.nextBtn = document.getElementById('portfolioCarouselNext');
+        this.indicatorsContainer = document.getElementById('portfolioCarouselIndicators');
+        
+        if (!this.track || !this.prevBtn || !this.nextBtn) {
+            return; // Carousel elements not found
+        }
+        
+        this.items = Array.from(this.track.querySelectorAll('.carousel-item'));
+        this.currentIndex = 0;
+        this.itemCount = this.items.length;
+        
+        this.init();
+        this.setupEventListeners();
+    }
+    
+    init() {
+        // Mark first item as active
+        this.items.forEach((item, index) => {
+            item.classList.toggle('active', index === 0);
+        });
+        
+        // Create indicators
+        this.createIndicators();
+        this.updateTrack();
+    }
+    
+    createIndicators() {
+        this.indicatorsContainer.innerHTML = '';
+        
+        for (let i = 0; i < this.itemCount; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+            indicator.addEventListener('click', () => this.goToSlide(i));
+            this.indicatorsContainer.appendChild(indicator);
+        }
+    }
+    
+    setupEventListeners() {
+        this.prevBtn.addEventListener('click', () => this.prevSlide());
+        this.nextBtn.addEventListener('click', () => this.nextSlide());
+        
+        // Keyboard navigation when portfolio section is in view
+        document.addEventListener('keydown', (e) => {
+            const portfolioSection = document.querySelector('section#portfolio');
+            if (portfolioSection) {
+                const rect = portfolioSection.getBoundingClientRect();
+                const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+                
+                if (isInView) {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.prevSlide();
+                    }
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        this.nextSlide();
+                    }
+                }
+            }
+        });
+    }
+    
+    updateTrack() {
+        const offset = -this.currentIndex * 100;
+        this.track.style.transform = `translateX(${offset}%)`;
+        
+        // Update active indicator
+        const indicators = this.indicatorsContainer.querySelectorAll('.carousel-indicator');
+        indicators.forEach((ind, index) => {
+            ind.classList.toggle('active', index === this.currentIndex);
+        });
+        
+        // Update active item
+        this.items.forEach((item, index) => {
+            item.classList.toggle('active', index === this.currentIndex);
+        });
+    }
+    
+    nextSlide() {
+        this.currentIndex = (this.currentIndex + 1) % this.itemCount;
+        this.updateTrack();
+    }
+    
+    prevSlide() {
+        this.currentIndex = (this.currentIndex - 1 + this.itemCount) % this.itemCount;
+        this.updateTrack();
+    }
+    
+    goToSlide(index) {
+        this.currentIndex = Math.max(0, Math.min(index, this.itemCount - 1));
+        this.updateTrack();
+    }
+}
