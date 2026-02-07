@@ -39,22 +39,29 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // ========================================
 const header = document.querySelector('.header');
 let lastScroll = 0;
+let scrollTimeout;
 
 window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;
     
-    if (currentScroll <= 0) {
-        header.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.3)';
-    } else {
-        header.style.boxShadow = '0 4px 20px rgba(0, 255, 65, 0.5)';
+    if (scrollTimeout) {
+        cancelAnimationFrame(scrollTimeout);
     }
     
-    // Ocultar/mostrar header al hacer scroll
-    if (currentScroll > lastScroll && currentScroll > 100) {
-        header.style.transform = 'translateY(-100%)';
-    } else {
-        header.style.transform = 'translateY(0)';
-    }
+    scrollTimeout = requestAnimationFrame(() => {
+        if (currentScroll <= 0) {
+            header.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.3)';
+        } else {
+            header.style.boxShadow = '0 4px 20px rgba(0, 255, 65, 0.5)';
+        }
+        
+        // Ocultar/mostrar header al hacer scroll
+        if (currentScroll > lastScroll && currentScroll > 100) {
+            header.style.transform = 'translateY(-100%)';
+        } else {
+            header.style.transform = 'translateY(0)';
+        }
+    });
     
     lastScroll = currentScroll;
 });
@@ -210,12 +217,14 @@ window.addEventListener('scroll', () => {
 });
 
 // ========================================
-// CONSOLE MESSAGE - HACKER STYLE
+// CONSOLE MESSAGE - HACKER STYLE (Development Only)
 // ========================================
-console.log('%c> SYSTEM INITIALIZED', 'color: #00ff41; font-size: 16px; font-family: monospace; font-weight: bold;');
-console.log('%c> LOADING PORTFOLIO...', 'color: #00cc33; font-size: 14px; font-family: monospace;');
-console.log('%c> ACCESS GRANTED', 'color: #00ff88; font-size: 14px; font-family: monospace;');
-console.log('%c> █', 'color: #00ff41; font-size: 16px; font-family: monospace;');
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('%c> SYSTEM INITIALIZED', 'color: #00ff41; font-size: 16px; font-family: monospace; font-weight: bold;');
+    console.log('%c> LOADING PORTFOLIO...', 'color: #00cc33; font-size: 14px; font-family: monospace;');
+    console.log('%c> ACCESS GRANTED', 'color: #00ff88; font-size: 14px; font-family: monospace;');
+    console.log('%c> █', 'color: #00ff41; font-size: 16px; font-family: monospace;');
+}
 
 // ========================================
 // SKILLS CAROUSEL
@@ -265,13 +274,25 @@ class SkillsCarousel {
         this.prevBtn.addEventListener('click', () => this.prevSlide());
         this.nextBtn.addEventListener('click', () => this.nextSlide());
         
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (this.track.closest('section#skills')) {
-                if (e.key === 'ArrowLeft') this.prevSlide();
-                if (e.key === 'ArrowRight') this.nextSlide();
+        // Keyboard navigation will be handled by global handler
+        this.handleKeyboard = (e) => {
+            const skillsSection = document.querySelector('section#skills');
+            if (skillsSection) {
+                const rect = skillsSection.getBoundingClientRect();
+                const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+                
+                if (isInView) {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.prevSlide();
+                    }
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        this.nextSlide();
+                    }
+                }
             }
-        });
+        };
     }
     
     updateTrack() {
@@ -306,11 +327,7 @@ class SkillsCarousel {
     }
 }
 
-// Initialize carousel when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    new SkillsCarousel();
-    new PortfolioCarousel();
-});
+// Carousels will be initialized in the main DOMContentLoaded
 
 // ========================================
 // PORTFOLIO CAROUSEL
@@ -360,8 +377,8 @@ class PortfolioCarousel {
         this.prevBtn.addEventListener('click', () => this.prevSlide());
         this.nextBtn.addEventListener('click', () => this.nextSlide());
         
-        // Keyboard navigation when portfolio section is in view
-        document.addEventListener('keydown', (e) => {
+        // Keyboard navigation will be handled by global handler
+        this.handleKeyboard = (e) => {
             const portfolioSection = document.querySelector('section#portfolio');
             if (portfolioSection) {
                 const rect = portfolioSection.getBoundingClientRect();
@@ -378,7 +395,7 @@ class PortfolioCarousel {
                     }
                 }
             }
-        });
+        };
     }
     
     updateTrack() {
@@ -479,6 +496,20 @@ class ProfileCardEffects {
     }
 }
 
+// ========================================
+// GLOBAL INITIALIZATION
+// ========================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize carousels
+    const skillsCarousel = new SkillsCarousel();
+    const portfolioCarousel = new PortfolioCarousel();
+    
+    // Initialize profile card effects
     new ProfileCardEffects();
+    
+    // Global keyboard handler for carousels (more efficient than multiple listeners)
+    document.addEventListener('keydown', (e) => {
+        if (skillsCarousel.handleKeyboard) skillsCarousel.handleKeyboard(e);
+        if (portfolioCarousel.handleKeyboard) portfolioCarousel.handleKeyboard(e);
+    });
 });

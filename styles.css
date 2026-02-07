@@ -430,6 +430,11 @@ body::before {
     transition: transform 0.1s ease-out;
     transform-style: preserve-3d;
     perspective: 1000px;
+    will-change: transform;
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .profile-img-wrapper:hover {
@@ -473,8 +478,8 @@ body::before {
 .profile-img-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    filter: brightness(0.9) contrast(1.1);
+    object-fit: contain;
+    object-position: center;
 }
 
 .tech-icons {
@@ -876,6 +881,7 @@ section {
     border: 1px solid rgba(0, 255, 65, 0.4);
     cursor: pointer;
     transition: all var(--transition-fast);
+    will-change: transform;
 }
 
 .carousel-indicator:hover {
@@ -1084,6 +1090,19 @@ section {
     color: #000000;
     position: relative;
     overflow: hidden;
+}
+
+.portfolio-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
+}
+
+.portfolio-image i {
+    position: relative;
+    z-index: 1;
 }
 
 .portfolio-image::before {
@@ -1749,3 +1768,23 @@ section {
     }
 }
 
+
+/* ========================================
+   ACCESSIBILITY - REDUCED MOTION
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .carousel-track,
+    .carousel-item,
+    .profile-img-wrapper {
+        transition: none !important;
+    }
+}
