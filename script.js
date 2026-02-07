@@ -412,3 +412,73 @@ class PortfolioCarousel {
         this.updateTrack();
     }
 }
+
+// ========================================
+// PROFILE CARD 3D TILT & GLOW EFFECTS
+// ========================================
+class ProfileCardEffects {
+    constructor() {
+        this.card = document.getElementById('profileCard');
+        this.glow = document.getElementById('profileGlow');
+        this.shine = document.getElementById('profileShine');
+        
+        if (!this.card) return;
+        
+        this.boundingRect = null;
+        this.isHovered = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.card.addEventListener('mouseenter', () => {
+            this.isHovered = true;
+            this.boundingRect = this.card.getBoundingClientRect();
+        });
+        
+        this.card.addEventListener('mouseleave', () => {
+            this.isHovered = false;
+            this.resetCard();
+        });
+        
+        this.card.addEventListener('mousemove', (e) => {
+            if (!this.isHovered) return;
+            this.handleMouseMove(e);
+        });
+    }
+    
+    handleMouseMove(e) {
+        const rect = this.boundingRect;
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const xPercent = (x / rect.width) * 100;
+        const yPercent = (y / rect.height) * 100;
+        
+        const tiltX = ((yPercent - 50) / 50) * -10;
+        const tiltY = ((xPercent - 50) / 50) * 10;
+        
+        this.card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
+        
+        if (this.glow) {
+            this.glow.style.left = `${xPercent}%`;
+            this.glow.style.top = `${yPercent}%`;
+        }
+        
+        if (this.shine) {
+            this.shine.style.background = `radial-gradient(circle at ${xPercent}% ${yPercent}%, rgba(255, 255, 255, 0.3) 0%, transparent 60%)`;
+        }
+    }
+    
+    resetCard() {
+        this.card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        if (this.glow) {
+            this.glow.style.left = '50%';
+            this.glow.style.top = '50%';
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    new ProfileCardEffects();
+});
