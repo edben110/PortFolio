@@ -2,11 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Edwar Alexander Benito Basante - Desarrollador de Software especializado en desarrollo full-stack con tecnologías modernas. Portfolio de proyectos en Python, Django, React, Angular y más.">
     <meta name="keywords" content="desarrollador software, full-stack developer, Python, Django, React, Angular, portfolio">
     <meta name="author" content="Edwar Alexander Benito Basante">
     <meta name="theme-color" content="#00ff41">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -22,6 +26,8 @@
     <title>Edben - Desarrollador de Software</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -294,12 +300,14 @@
                     </div>
 
                     <!-- Carousel Controls -->
-                    <button class="carousel-button carousel-prev" id="carouselPrev" aria-label="Habilidad anterior">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="carousel-button carousel-next" id="carouselNext" aria-label="Próxima habilidad">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+                    <div class="carousel-controls">
+                        <button class="carousel-button carousel-prev" id="carouselPrev" aria-label="Habilidad anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-button carousel-next" id="carouselNext" aria-label="Próxima habilidad">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Carousel Indicators -->
@@ -429,12 +437,14 @@
                     </div>
 
                     <!-- Carousel Controls -->
-                    <button class="carousel-button carousel-prev" id="portfolioCarouselPrev" aria-label="Proyecto anterior">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="carousel-button carousel-next" id="portfolioCarouselNext" aria-label="Próximo proyecto">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+                    <div class="carousel-controls">
+                        <button class="carousel-button carousel-prev" id="portfolioCarouselPrev" aria-label="Proyecto anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-button carousel-next" id="portfolioCarouselNext" aria-label="Próximo proyecto">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Carousel Indicators -->

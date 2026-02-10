@@ -709,8 +709,9 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     position: relative;
+    width: 100%;
 }
 
 .skills-carousel {
@@ -718,6 +719,8 @@ section {
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
+    overflow: hidden;
+    transition: min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .carousel-track {
@@ -725,46 +728,46 @@ section {
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     will-change: transform;
+    align-items: flex-start;
 }
 
 .carousel-item {
     min-width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     padding: 1rem;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.4s ease;
 }
 
 .carousel-item.active {
     opacity: 1;
-    animation: fadeInCarousel 0.5s ease forwards;
+    animation: fadeInCarousel 0.4s ease forwards;
 }
 
 @keyframes fadeInCarousel {
     from {
         opacity: 0;
-        transform: scale(0.95);
     }
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: none;
     }
 }
 
 /* Skill Category Container */
 .skill-category-container {
     width: 82.3%;
-    min-height: 350px;
-    max-height: 450px;
-    padding: 2rem 2rem;
+    min-height: 300px;
+    padding: 2rem 2rem 2.5rem;
     background: var(--bg-card);
     border-radius: var(--radius-lg);
     border: 1px solid var(--primary-color);
     box-shadow: 0 4px 20px rgba(0, 255, 65, 0.15);
     display: flex;
     flex-direction: column;
+    transition: all var(--transition-normal);
 }
 
 .skill-category-container .category-title {
@@ -783,9 +786,9 @@ section {
     display: grid;
     grid-template-columns: repeat(auto-fit, 150px);
     gap: 1rem;
-    flex: 1;
     align-content: start;
     justify-content: center;
+    padding-bottom: 0.5rem;
 }
 
 .carousel-item .skill-card {
@@ -812,11 +815,33 @@ section {
     background: var(--bg-card-hover);
 }
 
-/* Carousel Buttons */
-.carousel-button {
+/* Carousel Buttons Container */
+.carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.carousel-controls::before {
+    content: '';
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 60px;
+    background: rgba(0, 255, 65, 0.03);
+    border: 1px solid rgba(0, 255, 65, 0.1);
+    border-radius: var(--radius-full);
+    z-index: -1;
+}
+
+/* Carousel Buttons */
+.carousel-button {
     background: rgba(0, 255, 65, 0.15);
     border: 1px solid var(--primary-color);
     color: var(--text-primary);
@@ -830,38 +855,28 @@ section {
     font-size: 1.25rem;
     transition: all var(--transition-normal);
     z-index: 10;
+    flex-shrink: 0;
 }
 
 .carousel-button:hover {
     background: rgba(0, 255, 65, 0.3);
     box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
-    transform: translateY(-50%) scale(1.1);
+    transform: scale(1.1);
 }
 
 .carousel-button:active {
-    transform: translateY(-50%) scale(0.95);
+    transform: scale(0.95);
 }
 
-.carousel-prev {
-    left: -70px;
+.carousel-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
-.carousel-next {
-    right: -70px;
-}
-
-/* Portfolio carousel specific button position */
-.portfolio-carousel .carousel-button {
-    top: 60%;
-    transform: translateY(-60%);
-}
-
-.portfolio-carousel .carousel-button:hover {
-    transform: translateY(-60%) scale(1.1);
-}
-
-.portfolio-carousel .carousel-button:active {
-    transform: translateY(-60%) scale(0.95);
+.carousel-button:disabled:hover {
+    background: rgba(0, 255, 65, 0.15);
+    box-shadow: none;
+    transform: scale(1);
 }
 
 /* Carousel Indicators */
@@ -898,17 +913,18 @@ section {
 /* Responsive Carousel */
 @media (max-width: 768px) {
     .carousel-button {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
     }
     
-    .carousel-prev {
-        left: -50px;
+    .carousel-controls {
+        gap: 1.25rem;
     }
     
-    .carousel-next {
-        right: -50px;
+    .carousel-controls::before {
+        width: 160px;
+        height: 56px;
     }
     
     .skills-carousel {
@@ -916,9 +932,8 @@ section {
     }
 
     .skill-category-container {
-        min-height: 400px;
-        max-height: 400px;
-        padding: 1.5rem 1.25rem;
+        min-height: 320px;
+        padding: 1.5rem 1.25rem 2rem;
     }
 
     .skill-category-container .category-title {
@@ -946,16 +961,18 @@ section {
 
 @media (max-width: 480px) {
     .carousel-button {
-        width: 35px;
-        height: 35px;
-        font-size: 0.9rem;
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
     }
     
-    .carousel-prev,
-    .carousel-next {
-        position: static;
-        transform: none;
-        margin: 0 0.5rem;
+    .carousel-controls {
+        gap: 1rem;
+    }
+    
+    .carousel-controls::before {
+        width: 140px;
+        height: 52px;
     }
     
     .carousel-button:hover,
@@ -969,9 +986,8 @@ section {
     }
 
     .skill-category-container {
-        min-height: 400px;
-        max-height: 400px;
-        padding: 1.25rem 0.85rem;
+        min-height: 320px;
+        padding: 1.25rem 0.85rem 1.75rem;
     }
 
     .skill-category-container .category-title {
@@ -1020,7 +1036,7 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     position: relative;
 }
 
@@ -1029,6 +1045,7 @@ section {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
+    overflow: hidden;
 }
 
 .portfolio-carousel .carousel-track {
@@ -1562,10 +1579,64 @@ section {
 /* ========================================
    RESPONSIVE DESIGN
    ======================================== */
+
+/* Tablets y dispositivos medianos (1024px - 768px) */
+@media (max-width: 1024px) {
+    html {
+        font-size: 15px;
+    }
+    
+    .container {
+        max-width: 960px;
+        padding: 0 1.5rem;
+    }
+    
+    .hero-content {
+        gap: 3rem;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.75rem;
+    }
+    
+    /* Ajuste de skill cards en carrusel */
+    .skill-category-container {
+        width: 85%;
+        min-height: 300px;
+    }
+    
+    .skills-grid-carousel {
+        grid-template-columns: repeat(auto-fit, 145px);
+        gap: 0.95rem;
+    }
+    
+    .carousel-item .skill-card {
+        width: 145px;
+        min-height: 135px;
+        max-height: 135px;
+    }
+    
+    /* Contact cards */
+    .contact-info {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+/* Tablets pequeñas y móviles grandes (768px - 640px) */
 @media (max-width: 968px) {
+    html {
+        font-size: 14px;
+    }
+    
     .hero-content {
         grid-template-columns: 1fr;
         text-align: center;
+        gap: 2.5rem;
     }
     
     .hero-title {
@@ -1576,11 +1647,30 @@ section {
         font-size: 1.5rem;
     }
     
+    .hero-description {
+        font-size: 1rem;
+    }
+    
     .hero-buttons {
         justify-content: center;
         flex-wrap: wrap;
     }
     
+    /* Imagen de perfil ajustada */
+    .profile-img-wrapper {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .profile-card {
+        padding: 1.5rem;
+    }
+    
+    .tech-icons {
+        font-size: 1.75rem;
+    }
+    
+    /* Navegación móvil */
     .nav {
         position: fixed;
         top: 70px;
@@ -1618,16 +1708,31 @@ section {
         display: block;
     }
     
+    /* Logo ajustado */
+    .logo img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .logo {
+        font-size: 1.35rem;
+    }
+    
+    /* Skills */
     .skills-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    
+    .skill-category {
+        padding: 2rem;
     }
 
     .section-title {
         font-size: 2rem;
     }
-
-    .skill-category {
-        padding: 2rem;
+    
+    .section-subtitle {
+        font-size: 1rem;
     }
 
     /* Timeline responsive */
@@ -1650,6 +1755,13 @@ section {
 
     .timeline-content {
         width: 100%;
+        padding: 1.5rem;
+    }
+    
+    .timeline-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
     }
 
     /* Footer responsive */
@@ -1665,37 +1777,79 @@ section {
     }
 }
 
+/* Móviles medianos (640px - 480px) */
 @media (max-width: 640px) {
+    html {
+        font-size: 14px;
+    }
+    
     .container {
         padding: 0 1rem;
     }
     
+    section {
+        padding: 3rem 0;
+    }
+    
+    /* Hero section */
+    .hero {
+        padding-top: 70px;
+        min-height: auto;
+    }
+    
     .hero-title {
         font-size: 2rem;
+        line-height: 1.2;
     }
 
     .hero-subtitle {
         font-size: 1.25rem;
     }
     
+    .hero-description {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    .greeting {
+        font-size: 1rem;
+    }
+    
     .section-title {
         font-size: 1.75rem;
     }
     
+    .section-subtitle {
+        font-size: 0.95rem;
+    }
+    
     .hero-buttons {
         flex-direction: column;
+        width: 100%;
     }
 
     .btn {
         width: 100%;
         justify-content: center;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
     }
     
+    /* Imagen de perfil */
     .profile-img-wrapper {
         width: 250px;
         height: 250px;
     }
+    
+    .profile-card {
+        padding: 1.25rem;
+    }
+    
+    .tech-icons {
+        font-size: 1.5rem;
+    }
 
+    /* WhatsApp button */
     .whatsapp-button {
         bottom: 20px;
         right: 20px;
@@ -1703,18 +1857,67 @@ section {
         height: 55px;
         font-size: 1.5rem;
     }
+    
+    /* Logo */
+    .logo img {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .logo {
+        font-size: 1.25rem;
+    }
 
+    /* Skills */
     .skill-category {
         padding: 1.5rem;
     }
+    
+    .category-title {
+        font-size: 1.35rem;
+    }
+    
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .skill-card {
+        padding: 1.5rem;
+    }
+    
+    .skill-icon {
+        font-size: 2rem;
+    }
 
+    /* Portfolio */
     .portfolio-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .portfolio-carousel {
+        max-width: 100%;
+    }
+    
+    .portfolio-card {
+        margin: 0 0.5rem;
+    }
+    
+    .portfolio-image {
+        height: 180px;
+        font-size: 3rem;
+    }
+    
+    .portfolio-content {
+        padding: 1.25rem;
+    }
+    
+    .portfolio-content h3 {
+        font-size: 1.35rem;
     }
 
     /* Timeline mobile */
     .timeline {
-        padding-left: 50px;
+        padding-left: 40px;
     }
 
     .timeline-icon {
@@ -1743,6 +1946,20 @@ section {
         font-size: 0.75rem;
         padding: 0.4rem 0.75rem;
     }
+    
+    /* About */
+    .about-text p {
+        font-size: 1rem;
+    }
+    
+    .interests h3 {
+        font-size: 1.35rem;
+    }
+    
+    .tag {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
 
     /* Footer mobile */
     .footer {
@@ -1760,14 +1977,542 @@ section {
     .footer-link,
     .footer-social-link {
         font-size: 0.9rem;
+        padding: 0.4rem;
     }
 
     .footer-link i,
     .footer-social-link i {
         font-size: 1.1rem;
     }
+    
+    /* Contact cards */
+    .contact-info {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .contact-card {
+        padding: 2rem;
+    }
+    
+    .contact-card i {
+        font-size: 2.5rem;
+    }
 }
 
+/* Móviles pequeños (menos de 480px) */
+@media (max-width: 480px) {
+    html {
+        font-size: 13px;
+    }
+    
+    .container {
+        padding: 0 0.75rem;
+    }
+    
+    /* Hero section */
+    .hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.15rem;
+    }
+    
+    .greeting {
+        font-size: 0.95rem;
+    }
+    
+    .hero-description {
+        font-size: 0.9rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    /* Imagen de perfil más pequeña */
+    .profile-img-wrapper {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .profile-card {
+        padding: 1rem;
+    }
+    
+    .tech-icons {
+        font-size: 1.35rem;
+    }
+    
+    /* Header */
+    .header-content {
+        padding: 0.75rem 0;
+    }
+    
+    .logo img {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .logo {
+        font-size: 1.15rem;
+        gap: 0.75rem;
+    }
+    
+    .menu-toggle {
+        font-size: 1.35rem;
+    }
+    
+    /* Botones */
+    .btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+    }
+    
+    /* WhatsApp button */
+    .whatsapp-button {
+        bottom: 15px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.35rem;
+        border: 2px solid #000000;
+    }
+    
+    /* Skills */
+    .skill-category {
+        padding: 1.25rem;
+    }
+    
+    .category-title {
+        font-size: 1.25rem;
+    }
+    
+    .skill-card {
+        padding: 1.25rem;
+    }
+    
+    .skill-icon {
+        font-size: 1.85rem;
+    }
+    
+    .skill-card h4 {
+        font-size: 0.85rem;
+    }
+    
+    .skill-description {
+        font-size: 0.65rem;
+    }
+    
+    /* Portfolio */
+    .portfolio-image {
+        height: 160px;
+        font-size: 2.5rem;
+    }
+    
+    .portfolio-content {
+        padding: 1rem;
+    }
+    
+    .portfolio-content h3 {
+        font-size: 1.25rem;
+    }
+    
+    .portfolio-content p {
+        font-size: 0.85rem;
+    }
+    
+    .portfolio-tags span {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.7rem;
+    }
+    
+    /* Timeline */
+    .timeline {
+        padding-left: 35px;
+    }
+    
+    .timeline::before {
+        left: 15px;
+        width: 3px;
+    }
+    
+    .timeline-item {
+        padding-left: 50px;
+        margin-bottom: 2.5rem;
+    }
+    
+    .timeline-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.35rem;
+        margin-bottom: 1rem;
+    }
+    
+    .timeline-content {
+        padding: 1.25rem;
+    }
+    
+    .timeline-content h3 {
+        font-size: 1.15rem;
+    }
+    
+    .timeline-content h4 {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+    
+    .experience-description p {
+        font-size: 0.85rem;
+        gap: 0.5rem;
+    }
+    
+    .timeline-tags span {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.65rem;
+    }
+    
+    .date-badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
+    }
+    
+    /* About */
+    .about-text p {
+        font-size: 0.95rem;
+    }
+    
+    .interests h3 {
+        font-size: 1.25rem;
+    }
+    
+    .tag {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Contact */
+    .contact-card {
+        padding: 1.75rem;
+    }
+    
+    .contact-card i {
+        font-size: 2.25rem;
+        margin-bottom: 1rem;
+    }
+    
+    .contact-card h3 {
+        font-size: 1.15rem;
+    }
+    
+    .contact-card p {
+        font-size: 0.9rem;
+    }
+    
+    /* Footer */
+    .footer {
+        padding: 1.5rem 0 1rem;
+    }
+    
+    .footer-section h3 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-link,
+    .footer-social-link {
+        font-size: 0.85rem;
+        padding: 0.35rem;
+        gap: 0.6rem;
+    }
+    
+    .footer-link i,
+    .footer-social-link i {
+        font-size: 1rem;
+        width: 20px;
+    }
+    
+    .footer-bottom {
+        padding-top: 1.5rem;
+    }
+    
+    .footer-bottom p {
+        font-size: 0.8rem;
+    }
+}
+
+/* Pantallas muy pequeñas (menos de 360px) */
+@media (max-width: 360px) {
+    html {
+        font-size: 12px;
+    }
+    
+    .profile-img-wrapper {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .logo img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .whatsapp-button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.25rem;
+    }
+    
+    .timeline-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.15rem;
+    }
+    
+    .carousel-button {
+        width: 40px;
+        height: 40px;
+        font-size: 0.95rem;
+    }
+    
+    .carousel-controls {
+        gap: 0.75rem;
+    }
+    
+    .carousel-controls::before {
+        width: 130px;
+        height: 50px;
+    }
+}
+
+
+/* ========================================
+   ORIENTACIÓN HORIZONTAL (LANDSCAPE)
+   ======================================== */
+
+/* Móviles en landscape */
+@media (max-height: 600px) and (orientation: landscape) {
+    html {
+        scroll-padding-top: 60px;
+    }
+    
+    section {
+        padding: 2rem 0;
+    }
+    
+    .hero {
+        min-height: auto;
+        padding: 2rem 0;
+    }
+    
+    .hero-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        text-align: left;
+    }
+    
+    .profile-img-wrapper {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+    }
+    
+    .hero-description {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    
+    .btn {
+        width: auto;
+        padding: 0.65rem 1.25rem;
+        font-size: 0.85rem;
+    }
+    
+    .tech-icons {
+        font-size: 1.25rem;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+    }
+    
+    .profile-card {
+        padding: 1rem;
+    }
+}
+
+/* Tablets en landscape */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .hero-content {
+        gap: 2.5rem;
+    }
+    
+    .profile-img-wrapper {
+        width: 260px;
+        height: 260px;
+    }
+    
+    .hero {
+        padding-top: 80px;
+    }
+}
+
+/* ========================================
+   AJUSTES PARA PANTALLAS ANCHAS
+   ======================================== */
+@media (min-width: 1440px) {
+    html {
+        font-size: 17px;
+    }
+    
+    .container {
+        max-width: 1320px;
+    }
+    
+    .hero-title {
+        font-size: 4rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 2.25rem;
+    }
+    
+    .section-title {
+        font-size: 2.75rem;
+    }
+    
+    /* Mantener tamaños fijos de elementos específicos */
+    .profile-img-wrapper {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .logo img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .whatsapp-button {
+        width: 65px;
+        height: 65px;
+    }
+}
+
+@media (min-width: 1920px) {
+    html {
+        font-size: 18px;
+    }
+    
+    .container {
+        max-width: 1600px;
+    }
+    
+    .hero-title {
+        font-size: 4.5rem;
+    }
+}
+
+/* ========================================
+   AJUSTES ESPECÍFICOS PARA TOUCH DEVICES
+   ======================================== */
+@media (hover: none) and (pointer: coarse) {
+    /* Aumentar tamaños de botones para mejor touch target */
+    .btn {
+        min-height: 44px;
+        padding: 1rem 2rem;
+    }
+    
+    .menu-toggle {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0.5rem;
+    }
+    
+    .carousel-button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .carousel-indicator {
+        width: 12px;
+        height: 12px;
+        min-width: 44px;
+        min-height: 44px;
+        position: relative;
+    }
+    
+    .carousel-indicator::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 44px;
+        height: 44px;
+    }
+    
+    /* Eliminar efectos hover en dispositivos táctiles */
+    .profile-card-glow,
+    .profile-img-shine {
+        display: none;
+    }
+    
+    .nav-link::before {
+        display: none;
+    }
+}
+
+/* ========================================
+   IMPRESIÓN
+   ======================================== */
+@media print {
+    #matrixCanvas,
+    .whatsapp-button,
+    .menu-toggle,
+    .hero-background,
+    body::before {
+        display: none !important;
+    }
+    
+    .header {
+        position: relative;
+        box-shadow: none;
+    }
+    
+    section {
+        page-break-inside: avoid;
+    }
+    
+    * {
+        color: #000 !important;
+        background: #fff !important;
+    }
+}
 
 /* ========================================
    ACCESSIBILITY - REDUCED MOTION
@@ -1788,3 +2533,226 @@ section {
         transition: none !important;
     }
 }
+
+/* ========================================
+   MEJORAS DE CONTRASTE Y ACCESIBILIDAD
+   ======================================== */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #00ff00;
+        --text-primary: #00ff00;
+        --bg-primary: #000000;
+    }
+    
+    .nav-link,
+    .btn,
+    .portfolio-card,
+    .skill-card {
+        border-width: 2px;
+    }
+}
+
+/* ========================================
+   NAVEGACIÓN POR TECLADO
+   ======================================== */
+.keyboard-nav *:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 2px #000000, 0 0 0 5px var(--primary-color);
+}
+
+.keyboard-nav button:focus,
+.keyboard-nav a:focus {
+    z-index: 10;
+}
+
+/* ========================================
+   UTILIDADES RESPONSIVE
+   ======================================== */
+
+/* Ocultar elementos en diferentes tamaños */
+.hide-mobile {
+    display: block;
+}
+
+.hide-desktop {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none;
+    }
+    
+    .hide-desktop {
+        display: block;
+    }
+}
+
+/* Ajustes de espaciado responsive */
+@media (max-width: 968px) {
+    :root {
+        --spacing-xs: 0.375rem;
+        --spacing-sm: 0.75rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 3rem;
+        --spacing-xl: 4rem;
+    }
+}
+
+@media (max-width: 640px) {
+    :root {
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+    }
+}
+
+/* Mejoras de rendimiento para animaciones */
+.carousel-track,
+.profile-img-wrapper,
+.portfolio-card,
+.skill-card {
+    will-change: transform;
+}
+
+/* Deshabilitar will-change después de la animación */
+.carousel-item.active {
+    will-change: auto;
+}
+
+/* Smooth scrolling con fallback */
+@supports (scroll-behavior: smooth) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Optimización de imágenes */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Prevenir zoom en inputs en iOS */
+@media (max-width: 640px) {
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Mejoras para pantallas táctiles */
+@media (hover: none) {
+    .btn:active {
+        transform: scale(0.95);
+    }
+    
+    .portfolio-card:active {
+        transform: translateY(-5px);
+    }
+    
+    .skill-card:active {
+        transform: translateY(-4px);
+    }
+}
+
+/* Container queries para componentes modernos */
+@supports (container-type: inline-size) {
+    .skill-category {
+        container-type: inline-size;
+        container-name: skill-category;
+    }
+    
+    @container skill-category (max-width: 600px) {
+        .skills-grid-carousel {
+            grid-template-columns: repeat(auto-fit, 120px);
+        }
+    }
+}
+
+/* Ajustes para modo oscuro del sistema (ya está oscuro por defecto) */
+@media (prefers-color-scheme: light) {
+    /* El portfolio tiene un tema oscuro fijo, pero podríamos añadir esta opción */
+    /* Por ahora solo mantenemos el tema oscuro */
+}
+
+/* Ajuste de altura dinámica para mobile (usando custom property) */
+.hero {
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+}
+
+/* Mejoras de rendimiento: GPU acceleration */
+.header,
+.whatsapp-button,
+.carousel-track,
+.profile-img-wrapper {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Safe area insets para dispositivos con notch */
+@supports (padding: env(safe-area-inset-left)) {
+    .container {
+        padding-left: max(2rem, env(safe-area-inset-left));
+        padding-right: max(2rem, env(safe-area-inset-right));
+    }
+    
+    @media (max-width: 640px) {
+        .container {
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+        }
+    }
+    
+    .header {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        top: env(safe-area-inset-top);
+    }
+    
+    .whatsapp-button {
+        right: max(30px, calc(30px + env(safe-area-inset-right)));
+        bottom: max(30px, calc(30px + env(safe-area-inset-bottom)));
+    }
+    
+    @media (max-width: 640px) {
+        .whatsapp-button {
+            right: max(20px, calc(20px + env(safe-area-inset-right)));
+            bottom: max(20px, calc(20px + env(safe-area-inset-bottom)));
+        }
+    }
+}
+
+/* Prevenir scroll horizontal en dispositivos pequeños */
+body,
+html {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Mejorar tap highlight en móviles */
+a,
+button,
+.carousel-indicator,
+.menu-toggle {
+    -webkit-tap-highlight-color: rgba(0, 255, 65, 0.2);
+}
+
+/* Reducir animaciones en conexiones lentas */
+@media (prefers-reduced-data: reduce) {
+    * {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+    }
+    
+    #matrixCanvas {
+        display: none;
+    }
+}
+

@@ -243,6 +243,7 @@ class SkillsCarousel {
         this.items = Array.from(this.track.querySelectorAll('.carousel-item'));
         this.currentIndex = 0;
         this.itemCount = this.items.length;
+        this.heightUpdateTimeout = null;
         
         this.init();
         this.setupEventListeners();
@@ -257,6 +258,11 @@ class SkillsCarousel {
         // Create indicators
         this.createIndicators();
         this.updateTrack();
+        
+        // Ensure height is set after initial render
+        setTimeout(() => {
+            this.updateCarouselHeight();
+        }, 100);
     }
     
     createIndicators() {
@@ -309,6 +315,18 @@ class SkillsCarousel {
         this.items.forEach((item, index) => {
             item.classList.toggle('active', index === this.currentIndex);
         });
+        
+        // Cancel any pending height update
+        if (this.heightUpdateTimeout) {
+            clearTimeout(this.heightUpdateTimeout);
+        }
+        
+        // Update carousel height dynamically based on active item
+        // Use setTimeout to ensure DOM has updated after class changes
+        this.heightUpdateTimeout = setTimeout(() => {
+            this.updateCarouselHeight();
+            this.heightUpdateTimeout = null;
+        }, 50);
     }
     
     nextSlide() {
@@ -324,6 +342,58 @@ class SkillsCarousel {
     goToSlide(index) {
         this.currentIndex = Math.max(0, Math.min(index, this.itemCount - 1));
         this.updateTrack();
+    }
+    
+    updateCarouselHeight() {
+        // Wait for next frame to ensure layout is calculated
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                const activeItem = this.items[this.currentIndex];
+                if (!activeItem) {
+                    console.warn('No active item found');
+                    return;
+                }
+                
+                const container = activeItem.querySelector('.skill-category-container');
+                if (!container) {
+                    console.warn('No skill-category-container found in active item');
+                    return;
+                }
+                
+                // Temporarily make all items visible to get accurate measurements
+                const originalDisplay = activeItem.style.display;
+                activeItem.style.display = 'flex';
+                
+                // Force a reflow to get accurate height
+                void container.offsetHeight;
+                
+                // Get the actual height including all content
+                const containerHeight = container.getBoundingClientRect().height;
+                const itemHeight = activeItem.getBoundingClientRect().height;
+                
+                // Restore original display
+                if (originalDisplay) {
+                    activeItem.style.display = originalDisplay;
+                }
+                
+                const carousel = this.track.closest('.skills-carousel');
+                
+                if (carousel && itemHeight > 0) {
+                    const previousHeight = carousel.style.minHeight || 'auto';
+                    
+                    // Set height to accommodate the content smoothly
+                    carousel.style.minHeight = `${itemHeight}px`;
+                    carousel.style.transition = 'min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                    
+                    // Debug log (only in development)
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        console.log(`%c> Carousel height: ${previousHeight} → ${itemHeight}px (container: ${containerHeight}px, index: ${this.currentIndex})`, 'color: #00ff88; font-family: monospace;');
+                    }
+                } else {
+                    console.warn('Carousel not found or invalid height:', { carousel, itemHeight });
+                }
+            });
+        });
     }
 }
 
@@ -507,9 +577,335 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize profile card effects
     new ProfileCardEffects();
     
+    // Add touch gestures to carousels
+    if (skillsCarousel.track) {
+        new TouchGestureHandler(skillsCarousel);
+    }
+    if (portfolioCarousel.track) {
+        new TouchGestureHandler(portfolioCarousel);
+    }
+    
     // Global keyboard handler for carousels (more efficient than multiple listeners)
     document.addEventListener('keydown', (e) => {
         if (skillsCarousel.handleKeyboard) skillsCarousel.handleKeyboard(e);
         if (portfolioCarousel.handleKeyboard) portfolioCarousel.handleKeyboard(e);
     });
+    
+    // Update carousel heights on breakpoint change
+    window.addEventListener('breakpointChange', () => {
+        if (skillsCarousel.updateCarouselHeight) {
+            setTimeout(() => skillsCarousel.updateCarouselHeight(), 100);
+        }
+    });
+    
+    // Update carousel heights on window resize with debounce
+    let resizeHeightTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeHeightTimeout);
+        resizeHeightTimeout = setTimeout(() => {
+            if (skillsCarousel.updateCarouselHeight) {
+                skillsCarousel.updateCarouselHeight();
+            }
+        }, 300);
+    });
+});
+
+// ========================================
+// RESPONSIVE UTILITIES
+// ========================================
+class ResponsiveHandler {
+    constructor() {
+        this.breakpoints = {
+            mobile: 480,
+            tablet: 768,
+            desktop: 1024,
+            wide: 1440
+        };
+        
+        this.currentBreakpoint = this.getBreakpoint();
+        this.init();
+    }
+    
+    init() {
+        // Handle window resize with debounce
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.handleResize();
+            }, 250);
+        });
+        
+        // Handle orientation change
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.handleOrientationChange();
+            }, 100);
+        });
+        
+        // Initial setup
+        this.handleResize();
+    }
+    
+    getBreakpoint() {
+        const width = window.innerWidth;
+        
+        if (width < this.breakpoints.mobile) return 'xs';
+        if (width < this.breakpoints.tablet) return 'mobile';
+        if (width < this.breakpoints.desktop) return 'tablet';
+        if (width < this.breakpoints.wide) return 'desktop';
+        return 'wide';
+    }
+    
+    handleResize() {
+        const newBreakpoint = this.getBreakpoint();
+        
+        if (newBreakpoint !== this.currentBreakpoint) {
+            this.currentBreakpoint = newBreakpoint;
+            this.onBreakpointChange(newBreakpoint);
+        }
+        
+        // Update viewport height for mobile browsers
+        this.updateViewportHeight();
+        
+        // Recalculate carousel positions if needed
+        this.recalculateLayout();
+    }
+    
+    updateViewportHeight() {
+        // Fix for mobile browsers where 100vh includes address bar
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    
+    handleOrientationChange() {
+        // Close mobile menu on orientation change
+        const nav = document.querySelector('.nav');
+        const menuToggle = document.getElementById('menuToggle');
+        
+        if (nav && nav.classList.contains('active')) {
+            nav.classList.remove('active');
+            if (menuToggle) {
+                const icon = menuToggle.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        }
+        
+        // Update layout
+        this.updateViewportHeight();
+        this.recalculateLayout();
+    }
+    
+    recalculateLayout() {
+        // Trigger reflow for carousels
+        const carouselTracks = document.querySelectorAll('.carousel-track');
+        carouselTracks.forEach(track => {
+            const currentTransform = track.style.transform;
+            track.style.transform = 'none';
+            // Force reflow
+            void track.offsetHeight;
+            track.style.transform = currentTransform;
+        });
+    }
+    
+    onBreakpointChange(breakpoint) {
+        // Log breakpoint change (only in development)
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log(`%c> BREAKPOINT CHANGED: ${breakpoint}`, 'color: #00ff41; font-family: monospace;');
+        }
+        
+        // Dispatch custom event for other components
+        window.dispatchEvent(new CustomEvent('breakpointChange', { 
+            detail: { breakpoint } 
+        }));
+    }
+}
+
+// ========================================
+// TOUCH GESTURES FOR CAROUSELS
+// ========================================
+class TouchGestureHandler {
+    constructor(carousel) {
+        this.carousel = carousel;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.minSwipeDistance = 50;
+        
+        if (carousel.track) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.carousel.track.addEventListener('touchstart', (e) => {
+            this.touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        this.carousel.track.addEventListener('touchend', (e) => {
+            this.touchEndX = e.changedTouches[0].screenX;
+            this.handleSwipe();
+        }, { passive: true });
+    }
+    
+    handleSwipe() {
+        const swipeDistance = this.touchStartX - this.touchEndX;
+        
+        if (Math.abs(swipeDistance) > this.minSwipeDistance) {
+            if (swipeDistance > 0) {
+                // Swipe left - next slide
+                this.carousel.nextSlide();
+            } else {
+                // Swipe right - previous slide
+                this.carousel.prevSlide();
+            }
+        }
+    }
+}
+
+// ========================================
+// LAZY LOADING FOR IMAGES
+// ========================================
+class LazyImageLoader {
+    constructor() {
+        this.images = document.querySelectorAll('img[data-src]');
+        this.init();
+    }
+    
+    init() {
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '50px'
+            });
+            
+            this.images.forEach(img => imageObserver.observe(img));
+        } else {
+            // Fallback for browsers without IntersectionObserver
+            this.images.forEach(img => {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            });
+        }
+    }
+}
+
+// ========================================
+// PERFORMANCE MONITORING
+// ========================================
+class PerformanceMonitor {
+    constructor() {
+        this.init();
+    }
+    
+    init() {
+        // Only log in development
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            window.addEventListener('load', () => {
+                if (window.performance && window.performance.timing) {
+                    const perfData = window.performance.timing;
+                    const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+                    const domReadyTime = perfData.domContentLoadedEventEnd - perfData.navigationStart;
+                    
+                    console.log(`%c> PAGE LOAD TIME: ${pageLoadTime}ms`, 'color: #00ff88; font-family: monospace;');
+                    console.log(`%c> DOM READY TIME: ${domReadyTime}ms`, 'color: #00ff88; font-family: monospace;');
+                }
+            });
+        }
+    }
+}
+
+// ========================================
+// INITIALIZE ALL RESPONSIVE FEATURES
+// ========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize responsive handler
+    const responsiveHandler = new ResponsiveHandler();
+    
+    // Initialize lazy loading
+    const lazyLoader = new LazyImageLoader();
+    
+    // Initialize performance monitor
+    const perfMonitor = new PerformanceMonitor();
+});
+
+// ========================================
+// ACCESSIBLE FOCUS MANAGEMENT
+// ========================================
+class FocusManager {
+    constructor() {
+        this.init();
+    }
+    
+    init() {
+        // Add visible focus indicator for keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                document.body.classList.add('keyboard-nav');
+            }
+        });
+        
+        document.addEventListener('mousedown', () => {
+            document.body.classList.remove('keyboard-nav');
+        });
+        
+        // Trap focus in mobile menu when open
+        const nav = document.querySelector('.nav');
+        const menuToggle = document.getElementById('menuToggle');
+        
+        if (nav && menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                if (nav.classList.contains('active')) {
+                    this.trapFocus(nav);
+                } else {
+                    this.releaseFocus();
+                }
+            });
+        }
+    }
+    
+    trapFocus(element) {
+        const focusableElements = element.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+        
+        element.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                if (e.shiftKey && document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        });
+        
+        // Focus first element
+        if (firstFocusable) {
+            firstFocusable.focus();
+        }
+    }
+    
+    releaseFocus() {
+        const menuToggle = document.getElementById('menuToggle');
+        if (menuToggle) {
+            menuToggle.focus();
+        }
+    }
+}
+
+// Initialize focus manager
+document.addEventListener('DOMContentLoaded', () => {
+    new FocusManager();
 });
